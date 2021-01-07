@@ -11,8 +11,3 @@ def read_tdms_to_nparray(name):
     df = pd.DataFrame(data[1])
     frame = df.iloc[0]
     return np.array(frame).reshape((256, 128))
-
-# df = read_tdms_to_nparray('test.tdms')
-# print(df)
-# pass
-    

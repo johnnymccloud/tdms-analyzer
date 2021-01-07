@@ -9,8 +9,3 @@ def heatmap_from_tdms(name):
     heatmap = plt.imshow(data)
     plt.colorbar(heatmap)
     return heatmap
-    # plt.show()
-    
-# plot = heatmap_from_tdms('test.tdms')
-# plt.show()
-
