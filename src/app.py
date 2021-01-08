@@ -1,11 +1,10 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 import matplotlib.pyplot as plt
-from kivy.uix.label import Label
-from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
+from kivy.uix.button import Button
 import kivy
 
-from heatmap import heatmap_from_tdms
+from heatmap import Heatmap
 
 kivy.require('1.11.1')
 
@@ -17,8 +16,18 @@ class tdmsAnalyzer(App):
         box = BoxLayout()
         # plt.plot([1, 23, 2, 4])
         # plt.ylabel('some numbers')
-        plot = heatmap_from_tdms('test.tdms')
-        box.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+        heatmap = Heatmap()
+        btnNext = Button(text = 'next',
+                    size = (100,100),
+                    on_press = heatmap.nextFigure)
+        btnPrev = Button(text = 'prev',
+                    size = (100,100),
+                    on_press = heatmap.prevFigure)
+        
+        box.add_widget(btnPrev)
+        box.add_widget(btnNext)
+        box.add_widget(heatmap)
+        
         return box
 
     # Here our class is initialized

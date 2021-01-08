@@ -9,5 +9,5 @@ def read_tdms_to_nparray(name):
         df_group = group.as_dataframe()
         data.append(df_group)
     df = pd.DataFrame(data[1])
-    frame = df.iloc[0]
-    return np.array(frame).reshape((256, 128))
+    frames = [np.array(df.iloc[i]).reshape((256, 128)) for i in range(len(df))]
+    return frames
