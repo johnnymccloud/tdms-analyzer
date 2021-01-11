@@ -14,7 +14,8 @@ class Heatmap(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         
-        self.data = read_tdms_to_nparray('test.tdms')
+        #self.data = read_tdms_to_nparray('test.tdms')
+        self.data = np.zeros((376, 256, 128))
         self.dataIndex = 0
         self.renderGraph()
         #plt.colorbar(heatmap)
@@ -33,5 +34,8 @@ class Heatmap(BoxLayout):
         if self.dataIndex > 0:
             self.dataIndex -= 1
             self.renderGraph()
+            
+    def loadData(self, path):
+        self.data = read_tdms_to_nparray(path)
+        self.renderGraph()
         
-    
