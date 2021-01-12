@@ -1,9 +1,15 @@
+import pkg_resources
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-import matplotlib.pyplot as plt
 from kivy.uix.button import Button
-
 import kivy
+
+import sys
+if sys.version_info.major != 3 or sys.version_info.minor != 8:
+    print(sys.version_info)
+    sys.exit('Python 3.8.X or is required.')
+pkg_resources.require("matplotlib==3.1.3")
+import matplotlib.pyplot as plt
 
 from heatmap import Heatmap
 from fileChooser import FileChooser
