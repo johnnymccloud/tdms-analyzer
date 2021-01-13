@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 
 from heatmap import Heatmap
 from fileChooser import FileChooser
+from graph import SingleGraph
 
 kivy.require('1.11.1')
 
@@ -22,7 +23,8 @@ class tdmsAnalyzer(App):
     # the root widget
     def build(self):
         box = BoxLayout()
-        buttons = BoxLayout(orientation='vertical')
+        leftpanel = BoxLayout(orientation='vertical')
+        buttons = BoxLayout()
         # plt.plot([1, 23, 2, 4])
         # plt.ylabel('some numbers')
         heatmap = Heatmap()
@@ -37,11 +39,19 @@ class tdmsAnalyzer(App):
                     size = (100,100),
                     on_press = self.stop)
         
+        singlegraph = SingleGraph(range(376))
+        multigraph = SingleGraph(range(375, -1, -1))
+        
+        
         buttons.add_widget(btnPrev)
         buttons.add_widget(btnNext)
         buttons.add_widget(btnExit)
         
-        box.add_widget(buttons)
+        leftpanel.add_widget(singlegraph)
+        leftpanel.add_widget(multigraph)
+        leftpanel.add_widget(buttons)
+        
+        box.add_widget(leftpanel)
         box.add_widget(heatmap)
         
         box.add_widget(filechooser)

@@ -30,11 +30,14 @@ class FileChooser(FloatLayout):
         self.add_widget(self.loadbutton)
         
     def loadFileFromPath(self, btn):
-        tdmsPath = self.filelist.selection[0] 
-        print(tdmsPath + ' check if TDMS file')
-        if '.tdms' in tdmsPath:
-            print(tdmsPath + ' loading...')
-            self.loadingfunction(tdmsPath)
-        else:
-            print('Incorrect File')
+        try:
+            tdmsPath = self.filelist.selection[0] 
+            print(tdmsPath + ' check if TDMS file')
+            if '.tdms' in tdmsPath:
+                print(tdmsPath + ' loading...')
+                self.loadingfunction(tdmsPath)
+            else:
+                print('Incorrect File')
+        except:
+            print('Select File')
             
