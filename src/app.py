@@ -39,7 +39,7 @@ class tdmsAnalyzer(App):
                     on_press = self.stop)
 
         self.singlegraph = SingleGraph(range(376))
-        self.multigraph = SingleGraph(range(375, -1, -1))
+        self.multigraph = SingleGraph(range(376))
     # Function that returns
     # the root widget
     def build(self):

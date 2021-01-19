@@ -19,8 +19,8 @@ class SingleGraph(BoxLayout):
         
     def renderGraph(self):
         self.ax.clear()
-        self.ax.plot(self.data)
         self.ax.plot([self.frameNumber, self.frameNumber], [0, max(self.data)], 'k-', lw=2, color='red')
+        self.ax.plot(self.data)
         self.fig.canvas.draw_idle()
        
     def updateGraph(self, data, frameNumber):
