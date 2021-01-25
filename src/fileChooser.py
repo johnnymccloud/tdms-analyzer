@@ -5,6 +5,7 @@ from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.button import Button
+from kivy.uix.label import Label
 
 
 
@@ -22,12 +23,16 @@ class FileChooser(FloatLayout):
         self.filelist = FileList(size_hint = (1, 0.9),
                                  pos_hint = {'x': 0, 'y' : 0.1})
         self.loadbutton = Button(size_hint = (0.5, 0.1),
-                                 pos_hint = {'x': 0, 'y' : 0},
+                                 pos_hint = {'x': 0.5, 'y' : 0},
                                  text = 'LOAD FILE',
                                  on_press = self.loadFileFromPath)
+        self.coordinates = Label(size_hint = (0.5, 0.1),
+                                 pos_hint = {'x': 0, 'y' : 0},
+                                 text = 'X, X')
         
         self.add_widget(self.filelist)
         self.add_widget(self.loadbutton)
+        self.add_widget(self.coordinates)
         
     def loadFileFromPath(self, btn):
         try:
@@ -40,4 +45,8 @@ class FileChooser(FloatLayout):
                 print('Incorrect File')
         except:
             print('Select File')
+            
+    def updateCoordinates(self, x, y):
+        tempText = str(x) + ', ' + str(y)
+        self.coordinates.text = tempText
             

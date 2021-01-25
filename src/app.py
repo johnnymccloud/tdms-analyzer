@@ -14,7 +14,7 @@ if sys.version_info.major != 3 or sys.version_info.minor != 8:
 pkg_resources.require("matplotlib==3.1.3")
 from heatmap import Heatmap
 from fileChooser import FileChooser
-from graph import SingleGraph
+from graph import SingleGraph, MultiGraph
 
 kivy.require('1.11.1')
 
@@ -26,20 +26,21 @@ class tdmsAnalyzer(App):
         self.box = BoxLayout()
         self.leftpanel = BoxLayout(orientation='vertical')
         self.buttons = BoxLayout()
-        self.heatmap = Heatmap(on_hit = self.updateSinglegraphData)
+        self.heatmap = Heatmap(on_hit = self.updateGraphs)
         self.filechooser = FileChooser(loadingFunction = self.heatmap.loadData)
+        self.singlegraph = SingleGraph([0] * 376)
+        self.multigraph = MultiGraph([0] * 376)
+        
         self.btnNext = Button(text = 'NEXT\nFIGURE',
-                    #size = (100,100),
                     on_press = self.heatmap.nextFigure)
         self.btnPrev = Button(text = 'PREVIOUS\nFIGURE',
-                    #size = (100,100),
                     on_press = self.heatmap.prevFigure)
+        self.btnClearHistory = Button(text = 'CLEAR\nHISTORY',
+                    on_press = self.clearHistory)
         self.btnExit = Button(text = 'EXIT',
-                    #size = (100,100),
                     on_press = self.stop)
 
-        self.singlegraph = SingleGraph(range(376))
-        self.multigraph = SingleGraph(range(376))
+
     # Function that returns
     # the root widget
     def build(self):
@@ -47,6 +48,7 @@ class tdmsAnalyzer(App):
         Window.bind(on_resize=self.checkResize)
         self.buttons.add_widget(self.btnPrev)
         self.buttons.add_widget(self.btnNext)
+        self.buttons.add_widget(self.btnClearHistory)
         self.buttons.add_widget(self.btnExit)
         
         self.leftpanel.add_widget(self.singlegraph)
@@ -60,11 +62,16 @@ class tdmsAnalyzer(App):
         
         return self.box
 
-    def updateSinglegraphData(self, x, y):
+    def updateGraphs(self, x, y):
+        currentData = self.singlegraph.getData()
         updateData = [self.heatmap.getDataElement(frame, x, y) for frame in range(self.heatmap.getNumberOfFrames())]
         frameNumber = self.heatmap.getFrameNumber()
-        self.singlegraph.updateGraph(updateData, frameNumber)  
-    
+        self.singlegraph.updateGraph(updateData, frameNumber)
+        self.multigraph.updateGraph(currentData, frameNumber)
+        self.filechooser.updateCoordinates(x, y)
+        
+    def clearHistory(self, instance):
+        self.multigraph.clearGraph()
     def checkResize(self, instance, x, y):
         if x >  y * WINDOW_RATIO:
             x = y * WINDOW_RATIO

@@ -26,8 +26,6 @@ class Heatmap(BoxLayout):
         self.renderHeatmap()
         self.on_hit = on_hit
         
-        #plt.colorbar(heatmap)
-        
         
     def renderHeatmap(self):
         self.ax.clear()
