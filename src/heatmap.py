@@ -22,6 +22,7 @@ class Heatmap(BoxLayout):
         # self.chosen = None
         self.data = np.zeros((376, 256, 128))
         self.dataIndex = 0
+        self.fig, self.ax = plt.subplots()
         self.renderHeatmap()
         self.on_hit = on_hit
         
@@ -29,11 +30,11 @@ class Heatmap(BoxLayout):
         
         
     def renderHeatmap(self):
-        plt.clf()
-        plt.imshow(self.data[self.dataIndex], origin='lower')
-        # plt.plot(self.x, self.y)
+        self.ax.clear()
+        self.ax.imshow(self.data[self.dataIndex], origin='lower')
+        self.ax.axis('off')
         self.clear_widgets()
-        self.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+        self.add_widget(FigureCanvasKivyAgg(self.fig))
         
         
     def nextFigure(self, btn):

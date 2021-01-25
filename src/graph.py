@@ -1,9 +1,10 @@
 from matplotlib import style
 from matplotlib import pyplot as plt
-from matplotlib import use as mpl_use
+#from matplotlib import use as mpl_use
 from kivy.uix.boxlayout import BoxLayout
 
-mpl_use('module://kivy.garden.matplotlib.backend_kivy')
+#mpl_use('module://kivy.garden.matplotlib.backend_kivy')
+from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 style.use('dark_background')
 
 class SingleGraph(BoxLayout):
@@ -13,9 +14,8 @@ class SingleGraph(BoxLayout):
         self.frameNumber = 0
         self.fig, self.ax = plt.subplots()
         self.ax.plot(data)
-        self.mpl_canvas = self.fig.canvas
-        self.add_widget(self.mpl_canvas)
-        #self.fig.canvas.draw_idle()
+        self.add_widget(FigureCanvasKivyAgg(self.fig))
+        self.fig.canvas.draw_idle()
         
     def renderGraph(self):
         self.ax.clear()
@@ -27,7 +27,4 @@ class SingleGraph(BoxLayout):
         self.data = data
         self.frameNumber = frameNumber
         self.renderGraph()
-    
-    def do_layout(self, *largs):
-        super().do_layout(*largs)
-        self.renderGraph()
+        
