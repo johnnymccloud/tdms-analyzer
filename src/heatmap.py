@@ -31,6 +31,7 @@ class Heatmap(BoxLayout):
     def renderHeatmap(self):
         plt.clf()
         plt.imshow(self.data[self.dataIndex], origin='lower')
+        plt.axis('off')
         # plt.plot(self.x, self.y)
         self.clear_widgets()
         self.add_widget(FigureCanvasKivyAgg(plt.gcf()))
