@@ -16,10 +16,8 @@ class Heatmap(BoxLayout):
     def __init__(self, on_hit, **kwargs):
         super().__init__(**kwargs)
         
-        
         self.hitX = 0
         self.hitY = 0
-        # self.chosen = None
         self.data = np.zeros((376, 256, 128))
         self.dataIndex = 0
         self.fig, self.ax = plt.subplots()
@@ -75,9 +73,4 @@ class Heatmap(BoxLayout):
             print('\n--- TOUCH ---\n')
             print((self.hitX, self.hitY))
             self.on_hit(self.hitX, self.hitY)
-            # if self.chosen != None:
-            #     self.canvas.remove(self.chosen)
-            # self.chosen = Rectangle(pos=(inX, inY), size=(10, 10))
-            # self.canvas.add(self.chosen)
-        #print(touch.pos)
         
