@@ -45,6 +45,14 @@ class Heatmap(BoxLayout):
             self.dataIndex -= 1
             self.renderHeatmap()
             
+    def setDataIndex(self, dataIndex_new):
+        if 0 <= dataIndex_new < len(self.data):
+            self.dataIndex = dataIndex_new
+            self.renderHeatmap()
+            return True
+        else:
+            return False
+            
     def loadData(self, path):
         self.data = read_tdms_to_nparray(path)
         self.renderHeatmap()
