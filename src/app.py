@@ -35,9 +35,14 @@ class tdmsAnalyzer(App):
         self.singlegraph = SingleGraph([0] * 376)
         self.multigraph = MultiGraph([0] * 376)
         
-        self.lblScaleVal = Label(text = 'Y MAX')
+        self.lblScaleValTop = Label(text = 'Y MAX\nSINGLE')
+        self.lblScaleValBot = Label(text = 'Y MAX\nMULTI')
         self.lblThVal = Label(text = 'THRESHOLD')
-        self.txtScaleVal = TextInput(text = '1',
+        
+        self.txtScaleValTop = TextInput(text = '0',
+                                  multiline = False,
+                                  on_text_validate = self.scaleUpdate)
+        self.txtScaleValBot = TextInput(text = '0',
                                   multiline = False,
                                   on_text_validate = self.scaleUpdate)
         self.txtThVal = TextInput(text = '0',
@@ -65,9 +70,11 @@ class tdmsAnalyzer(App):
         self.buttons.add_widget(self.btnClearHistory)
         self.buttons.add_widget(self.btnExit)
         
-        self.textfields.add_widget(self.lblScaleVal)
+        self.textfields.add_widget(self.lblScaleValTop)
+        self.textfields.add_widget(self.lblScaleValBot)
         self.textfields.add_widget(self.lblThVal)
-        self.textfields.add_widget(self.txtScaleVal)
+        self.textfields.add_widget(self.txtScaleValTop)
+        self.textfields.add_widget(self.txtScaleValBot)
         self.textfields.add_widget(self.txtThVal)
         
         self.txtandbuttons.add_widget(self.textfields)
@@ -88,13 +95,15 @@ class tdmsAnalyzer(App):
         currentData = self.singlegraph.getData()
         updateData = [self.heatmap.getDataElement(frame, x, y) for frame in range(self.heatmap.getNumberOfFrames())]
         frameNumber = self.heatmap.getFrameNumber()
-        self.singlegraph.updateGraph(updateData, frameNumber)
-        self.multigraph.updateGraph(currentData, frameNumber)
+        self.singlegraph.updateGraph(frameNumber, updateData)
+        self.multigraph.updateGraph(currentData)
         self.filechooser.updateCoordinates(x, y)
         
     def thresholdUpdate(self, instance):
         try:
-            if self.heatmap.setDataIndex(int(instance.text)):
+            threshold_new = int(instance.text)
+            if self.heatmap.setDataIndex(threshold_new):
+                self.singlegraph.updateGraph(frameNumber = threshold_new)
                 print('frame: ' + instance.text)
             else:
                 raise Exception
@@ -104,8 +113,13 @@ class tdmsAnalyzer(App):
             
     def scaleUpdate(self, instance):
         try:
-            if self.singlegraph.setScale(int(instance.text)):
-                print('scale: ' + instance.text)
+            scale_new = int(instance.text)
+            if instance == self.txtScaleValTop:
+                self.singlegraph.setScale(scale_new)
+                print('single graph scale: ' + instance.text)
+            elif instance == self.txtScaleValBot:
+                self.multigraph.setScale(scale_new)
+                print('multi graph scale: ' + instance.text)
             else:
                 raise Exception
         except:
