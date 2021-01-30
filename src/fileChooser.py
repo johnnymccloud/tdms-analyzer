@@ -28,7 +28,7 @@ class FileChooser(FloatLayout):
                                  on_press = self.loadFileFromPath)
         self.coordinates = Label(size_hint = (0.5, 0.1),
                                  pos_hint = {'x': 0, 'y' : 0},
-                                 text = 'X, X')
+                                 text = '0, 0')
         
         self.add_widget(self.filelist)
         self.add_widget(self.loadbutton)
