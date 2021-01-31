@@ -1,4 +1,3 @@
-from tdms import read_tdms_to_nparray
 # Implementation of matplotlib function
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,15 +14,13 @@ class Heatmap(BoxLayout):
     
     def __init__(self, on_hit, **kwargs):
         super().__init__(**kwargs)
-        
         self.hitX = 0
         self.hitY = 0
         self.data = np.zeros((376, 256, 128))
         self.dataIndex = 0
         self.fig, self.ax = plt.subplots()
         self.renderHeatmap()
-        self.on_hit = on_hit
-        
+        self.on_hit = on_hit        
         
     def renderHeatmap(self):
         self.ax.clear()
@@ -51,8 +48,8 @@ class Heatmap(BoxLayout):
         else:
             return False
             
-    def loadData(self, path):
-        self.data = read_tdms_to_nparray(path)
+    def loadData(self, data):
+        self.data = data
         self.renderHeatmap()
         
     def getDataElement(self, frame, x, y):
