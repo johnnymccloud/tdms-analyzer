@@ -16,7 +16,7 @@ if sys.version_info.major != 3 or sys.version_info.minor != 8:
 pkg_resources.require("matplotlib==3.1.3")
 from heatmap import Heatmap
 from fileChooser import FileChooser
-from graph import SingleGraph, MultiGraph
+from graph import GraphPanel
 
 kivy.require('1.11.1')
 
@@ -28,27 +28,11 @@ class tdmsAnalyzer(App):
         self.box = BoxLayout()
         self.leftpanel = BoxLayout(orientation='vertical')
         self.txtandbuttons = BoxLayout(orientation='vertical')
-        self.textfields = GridLayout(rows=2)
         self.buttons = BoxLayout()
         self.heatmap = Heatmap(on_hit = self.updateGraphs)
         self.filechooser = FileChooser(loadingFunction = self.heatmap.loadData)
-        self.singlegraph = SingleGraph([0] * 376)
-        self.multigraph = MultiGraph([0] * 376)
-        
-        self.lblScaleValTop = Label(text = 'Y MAX\nSINGLE')
-        self.lblScaleValBot = Label(text = 'Y MAX\nMULTI')
-        self.lblThVal = Label(text = 'THRESHOLD')
-        
-        self.txtScaleValTop = TextInput(text = '0',
-                                  multiline = False,
-                                  on_text_validate = self.scaleUpdate)
-        self.txtScaleValBot = TextInput(text = '0',
-                                  multiline = False,
-                                  on_text_validate = self.scaleUpdate)
-        self.txtThVal = TextInput(text = '0',
-                                  multiline = False,
-                                  on_text_validate = self.thresholdUpdate)
-        
+        self.singlegraphpanel = GraphPanel(data = [0] * 376, single = True)
+        self.multigraphpanel = GraphPanel(data = [0] * 376, multi = True)  
         
         self.btnNext = Button(text = 'NEXT\nFIGURE',
                     on_press = self.heatmap.nextFigure)
@@ -58,10 +42,7 @@ class tdmsAnalyzer(App):
                     on_press = self.clearHistory)
         self.btnExit = Button(text = 'EXIT',
                     on_press = self.stop)
-    
 
-    # Function that returns
-    # the root widget
     def build(self):
         Window.size = (int(600 * WINDOW_RATIO), 600)
         Window.bind(on_resize=self.checkResize)
@@ -70,19 +51,9 @@ class tdmsAnalyzer(App):
         self.buttons.add_widget(self.btnClearHistory)
         self.buttons.add_widget(self.btnExit)
         
-        self.textfields.add_widget(self.lblScaleValTop)
-        self.textfields.add_widget(self.lblScaleValBot)
-        self.textfields.add_widget(self.lblThVal)
-        self.textfields.add_widget(self.txtScaleValTop)
-        self.textfields.add_widget(self.txtScaleValBot)
-        self.textfields.add_widget(self.txtThVal)
-        
-        self.txtandbuttons.add_widget(self.textfields)
-        self.txtandbuttons.add_widget(self.buttons)
-        
-        self.leftpanel.add_widget(self.singlegraph)
-        self.leftpanel.add_widget(self.multigraph)
-        self.leftpanel.add_widget(self.txtandbuttons)
+        self.leftpanel.add_widget(self.singlegraphpanel)
+        self.leftpanel.add_widget(self.multigraphpanel)
+        self.leftpanel.add_widget(self.buttons)
         
         self.box.add_widget(self.leftpanel)
         self.box.add_widget(self.heatmap)
@@ -92,43 +63,27 @@ class tdmsAnalyzer(App):
         return self.box
 
     def updateGraphs(self, x, y):
-        currentData = self.singlegraph.getData()
+        currentData = self.singlegraphpanel.graph.getData()
         updateData = [self.heatmap.getDataElement(frame, x, y) for frame in range(self.heatmap.getNumberOfFrames())]
         frameNumber = self.heatmap.getFrameNumber()
-        self.singlegraph.updateGraph(frameNumber, updateData)
-        self.multigraph.updateGraph(currentData)
+        self.singlegraphpanel.updateGraph(frameNumber, updateData)
+        self.multigraphpanel.updateGraph(data = currentData)
         self.filechooser.updateCoordinates(x, y)
         
     def thresholdUpdate(self, instance):
         try:
             threshold_new = int(instance.text)
             if self.heatmap.setDataIndex(threshold_new):
-                self.singlegraph.updateGraph(frameNumber = threshold_new)
+                self.singlegraphpanel.updateGraph(frameNumber = threshold_new)
                 print('frame: ' + instance.text)
             else:
                 raise Exception
         except:
             instance.text = str(self.heatmap.getFrameNumber())
-            print('invalid frame index')
-            
-    def scaleUpdate(self, instance):
-        try:
-            scale_new = int(instance.text)
-            if instance == self.txtScaleValTop:
-                self.singlegraph.setScale(scale_new)
-                print('single graph scale: ' + instance.text)
-            elif instance == self.txtScaleValBot:
-                self.multigraph.setScale(scale_new)
-                print('multi graph scale: ' + instance.text)
-            else:
-                raise Exception
-        except:
-            instance.text = str(self.singlegraph.getScale())
-            print('invalid scale value')
-        
+            print('invalid frame index')        
         
     def clearHistory(self, instance):
-        self.multigraph.clearGraph()
+        self.multigraphpanel.graph.clearGraph()
     def checkResize(self, instance, x, y):
         if x >  y * WINDOW_RATIO:
             x = y * WINDOW_RATIO
