@@ -38,6 +38,7 @@ class FileChooser(FloatLayout):
             if '.tdms' in tdmsPath:
                 print(tdmsPath + ' loading...')
                 self.loadingfunction(tdmsPath)
+                print('SUCCESSFULLY LOADED')
             else:
                 print('Incorrect File')
         except:

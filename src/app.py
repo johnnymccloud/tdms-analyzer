@@ -4,6 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
+from kivy.uix.slider import Slider
 from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.config import Config
@@ -17,6 +18,7 @@ pkg_resources.require("matplotlib==3.1.3")
 from heatmap import Heatmap
 from fileChooser import FileChooser
 from graph import GraphPanel
+from thresholdSlider import ThresholdSlider
 
 kivy.require('1.11.1')
 
@@ -27,7 +29,8 @@ class tdmsAnalyzer(App):
         super().__init__(**kwargs)
         self.box = BoxLayout()
         self.leftpanel = BoxLayout(orientation='vertical')
-        self.txtandbuttons = BoxLayout(orientation='vertical')
+        self.sliderandbuttons = BoxLayout(orientation='vertical')
+        self.thresholdslider = ThresholdSlider(thresholdUpdateFnc = self.thresholdUpdate)
         self.buttons = BoxLayout()
         self.heatmap = Heatmap(on_hit = self.updateGraphs)
         self.filechooser = FileChooser(loadingFunction = self.heatmap.loadData)
@@ -35,9 +38,9 @@ class tdmsAnalyzer(App):
         self.multigraphpanel = GraphPanel(data = [0] * 376, multi = True)  
         
         self.btnNext = Button(text = 'NEXT\nFIGURE',
-                    on_press = self.heatmap.nextFigure)
+                    on_press = self.nextFigure)
         self.btnPrev = Button(text = 'PREVIOUS\nFIGURE',
-                    on_press = self.heatmap.prevFigure)
+                    on_press = self.prevFigure)
         self.btnClearHistory = Button(text = 'CLEAR\nHISTORY',
                     on_press = self.clearHistory)
         self.btnExit = Button(text = 'EXIT',
@@ -51,9 +54,12 @@ class tdmsAnalyzer(App):
         self.buttons.add_widget(self.btnClearHistory)
         self.buttons.add_widget(self.btnExit)
         
+        self.sliderandbuttons.add_widget(self.thresholdslider)
+        self.sliderandbuttons.add_widget(self.buttons)
+        
         self.leftpanel.add_widget(self.singlegraphpanel)
         self.leftpanel.add_widget(self.multigraphpanel)
-        self.leftpanel.add_widget(self.buttons)
+        self.leftpanel.add_widget(self.sliderandbuttons)
         
         self.box.add_widget(self.leftpanel)
         self.box.add_widget(self.heatmap)
@@ -70,20 +76,27 @@ class tdmsAnalyzer(App):
         self.multigraphpanel.updateGraph(data = currentData)
         self.filechooser.updateCoordinates(x, y)
         
-    def thresholdUpdate(self, instance):
+    def maxThUpdate(self, val):
+        print(val)
+    def thresholdUpdate(self, instance, val):
         try:
-            threshold_new = int(instance.text)
+            threshold_new = int(val)
             if self.heatmap.setDataIndex(threshold_new):
                 self.singlegraphpanel.updateGraph(frameNumber = threshold_new)
-                print('frame: ' + instance.text)
+                print('frame: ' + str(threshold_new))
             else:
                 raise Exception
         except:
-            instance.text = str(self.heatmap.getFrameNumber())
             print('invalid frame index')        
         
     def clearHistory(self, instance):
         self.multigraphpanel.graph.clearGraph()
+    def prevFigure(self, btn):
+        self.heatmap.prevFigure()
+        self.thresholdslider.thresholdDec()
+    def nextFigure(self, btn):
+        self.heatmap.nextFigure()
+        self.thresholdslider.thresholdInc()
     def checkResize(self, instance, x, y):
         if x >  y * WINDOW_RATIO:
             x = y * WINDOW_RATIO

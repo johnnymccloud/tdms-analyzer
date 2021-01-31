@@ -33,12 +33,12 @@ class Heatmap(BoxLayout):
         self.add_widget(FigureCanvasKivyAgg(self.fig))
         
         
-    def nextFigure(self, btn):
+    def nextFigure(self):
         if self.dataIndex < len(self.data) - 1:
             self.dataIndex += 1
             self.renderHeatmap()
         
-    def prevFigure(self, btn):
+    def prevFigure(self):
         if self.dataIndex > 0:
             self.dataIndex -= 1
             self.renderHeatmap()
