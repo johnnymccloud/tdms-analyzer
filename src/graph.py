@@ -133,6 +133,7 @@ class MultiGraph(BoxLayout):
         
     def clearGraph(self):
         self.ax.clear()
+        self.data = [0] * 376
         self.renderGraph()
     
     def setScale(self, scale_new):

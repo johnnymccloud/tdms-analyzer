@@ -41,7 +41,9 @@ class tdmsAnalyzer(App):
                     on_press = self.nextFigure)
         self.btnPrev = Button(text = 'PREVIOUS\nFIGURE',
                     on_press = self.prevFigure)
-        self.btnClearHistory = Button(text = 'CLEAR\nHISTORY',
+        self.btnAddGraph = Button(text = 'COPY\nGRAPH',
+                    on_press = self.addCurrentToMultiGraph)
+        self.btnClearHistory = Button(text = 'CLEAR\nGRAPH',
                     on_press = self.clearHistory)
         self.btnExit = Button(text = 'EXIT',
                     on_press = self.stop)
@@ -51,6 +53,7 @@ class tdmsAnalyzer(App):
         Window.bind(on_resize=self.checkResize)
         self.buttons.add_widget(self.btnPrev)
         self.buttons.add_widget(self.btnNext)
+        self.buttons.add_widget(self.btnAddGraph)
         self.buttons.add_widget(self.btnClearHistory)
         self.buttons.add_widget(self.btnExit)
         
@@ -69,13 +72,11 @@ class tdmsAnalyzer(App):
         return self.box
 
     def updateGraphs(self, x, y):
-        currentData = self.singlegraphpanel.graph.getData()
         updateData = [self.heatmap.getDataElement(frame, x, y) for frame in range(self.heatmap.getNumberOfFrames())]
         frameNumber = self.heatmap.getFrameNumber()
         self.singlegraphpanel.updateGraph(frameNumber, updateData)
-        self.multigraphpanel.updateGraph(data = currentData)
         self.filechooser.updateCoordinates(x, y)
-        
+    
     def maxThUpdate(self, val):
         print(val)
     def thresholdUpdate(self, instance, val):
@@ -89,6 +90,9 @@ class tdmsAnalyzer(App):
         except:
             print('invalid frame index')        
         
+    def addCurrentToMultiGraph(self,btn):
+        currentData = self.singlegraphpanel.graph.getData()
+        self.multigraphpanel.updateGraph(data = currentData)
     def clearHistory(self, instance):
         self.multigraphpanel.graph.clearGraph()
     def prevFigure(self, btn):
