@@ -16,6 +16,7 @@ class ThresholdList(GridLayout):
         self.chooseThFnc = chooseThFnc
         
     def updateThresholds(self, thresholds):
+        self.clear_widgets()
         for th in thresholds:
             btn = Button(text = th,
                          on_press = self.chooseThFnc)

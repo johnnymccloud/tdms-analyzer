@@ -2,6 +2,8 @@ from nptdms import TdmsFile, TdmsWriter, ChannelObject, RootObject
 import numpy as np
 import pandas as pd
 
+import json
+
 class TdmsReader():
     def __init__(self):
         self.dict = None #TBD: add reading single properties from tdms file
@@ -58,6 +60,17 @@ class TdmsReader():
             return False
     
     def readConfigFromJson(self):
-        self.thresholdsConfig = [0, 2]
-        self.valuesConfig = [1, 3]
-        
+        try:
+            with open("config.json", "r") as config_file:
+                config = json.load(config_file)
+                self.thresholdsConfig = config['thresholdsConfig']
+                self.valuesConfig = config['valuesConfig']
+        except:
+            print('CONFIG CORRUPTED\ngenerating example config file: --example_config.json--')
+            with open("example_config.json", "w") as config_file:
+                data_set = {'thresholdsConfig': [0, 2],
+                            'valuesConfig' : [1, 3]
+                            }
+                config_file.write(json.dumps(data_set, indent=4))
+                print('application will exit now...')
+                exit()
