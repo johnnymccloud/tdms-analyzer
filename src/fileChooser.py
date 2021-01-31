@@ -30,7 +30,7 @@ class FileList(FileChooserListView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.path = os.getcwd()
-        #self.filters = ['\*.tdms']
+        self.filters = ['*.tdms']
         self.filter_dirs = False
         
 class FileChooser(FloatLayout):
