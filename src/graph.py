@@ -67,19 +67,21 @@ class SingleGraph(BoxLayout):
         self.scale = 0
         self.fig, self.ax = plt.subplots()
         self.ax.plot(data, lw=0.5)
-        self.ax.set_ylim(bottom = 0, top = None)
+        self.indicatorLength = 1
+        self.ax.set_ylim(bottom = 0, top = self.indicatorLength)
         self.add_widget(FigureCanvasKivyAgg(self.fig))
         self.fig.canvas.draw_idle()
         
     def renderGraph(self):
         self.ax.clear()
         self.ax.set_ylim(auto = True)
-        self.ax.plot([self.frameNumber, self.frameNumber], [0, max(max(self.data), self.scale)], 'k-', lw=0.5, color='red')
+        self.indicatorLength = max(max(self.data), self.scale, 1)
+        self.ax.plot([self.frameNumber, self.frameNumber], [0, self.indicatorLength], 'k-', lw=0.5, color='red')
         self.ax.plot(self.data, lw=0.5)
         if self.scale != 0:
             self.ax.set_ylim(bottom = 0, top = self.scale)
         else:
-            self.ax.set_ylim(bottom = 0, top = None)
+            self.ax.set_ylim(bottom = 0, top = self.indicatorLength)
         self.fig.canvas.draw_idle()
        
     def updateGraph(self, data = None, frameNumber = None):
@@ -111,19 +113,17 @@ class MultiGraph(BoxLayout):
         self.scale = 0
         self.fig, self.ax = plt.subplots()
         self.ax.plot(data, lw=0.5)
-        self.ax.set_ylim(bottom = 0, top = None)
+        self.indicatorLength = 1
+        self.ax.set_ylim(bottom = 0, top = self.indicatorLength)
         self.add_widget(FigureCanvasKivyAgg(self.fig))
         self.fig.canvas.draw_idle()
         self.frameIndicator = None
-        self.indicatorLength = 1
         
-    def renderGraph(self):
-        self.ax.set_ylim(auto = True)
-        self.ax.plot(self.data, lw=0.5)
-        if self.scale != 0:
-            self.ax.set_ylim(bottom = 0, top = self.scale)
-        else:
-            self.ax.set_ylim(bottom = 0, top = None)
+        
+    def renderGraph(self, drawData = True):
+        if drawData:
+            self.ax.plot(self.data, lw=0.5)
+        self.updateScale()
         self.fig.canvas.draw_idle()
     
     def renderFrameIndicator(self):
@@ -140,9 +140,17 @@ class MultiGraph(BoxLayout):
             self.renderFrameIndicator()
         if data != None:
             self.data = data
-            self.renderGraph()
             self.renderFrameIndicator()
-        
+            self.renderGraph()
+    
+    def updateScale(self):
+        self.ax.set_ylim(auto = True)
+        if self.scale != 0:
+            self.ax.set_ylim(bottom = 0, top = self.scale)
+        else:
+            self.ax.set_ylim(bottom = 0, top = self.indicatorLength)
+        self.fig.canvas.draw_idle()
+    
     def clearGraph(self):
         self.ax.clear()
         self.data = [0] * 376
@@ -153,7 +161,7 @@ class MultiGraph(BoxLayout):
     def setScale(self, scale_new):
         if 0 <= scale_new:
             self.scale = scale_new
-            self.renderGraph()
+            self.updateScale()
             return True
         else:
             return False
