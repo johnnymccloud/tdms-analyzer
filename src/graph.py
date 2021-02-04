@@ -58,10 +58,6 @@ class GraphPanel(FloatLayout):
         self.graph.updateGraph(data, frameNumber)
         if data != None:
             self.sliderRangeUpdate(max(data))
-    
-    # def autoScale(self, *args):
-    #     self.slider.value = 0
-    #     return False
 
 class SingleGraph(BoxLayout):
     def __init__(self, data, **kwargs):
@@ -77,7 +73,8 @@ class SingleGraph(BoxLayout):
         
     def renderGraph(self):
         self.ax.clear()
-        self.ax.plot([self.frameNumber, self.frameNumber], [0, max(max(self.data), self.scale)], 'k-', lw=1, color='red')
+        self.ax.set_ylim(auto = True)
+        self.ax.plot([self.frameNumber, self.frameNumber], [0, max(max(self.data), self.scale)], 'k-', lw=0.5, color='red')
         self.ax.plot(self.data, lw=0.5)
         if self.scale != 0:
             self.ax.set_ylim(bottom = 0, top = self.scale)
@@ -110,12 +107,15 @@ class MultiGraph(BoxLayout):
     def __init__(self, data, **kwargs):
         super().__init__(**kwargs)
         self.data = data
+        self.frameNumber = 0
         self.scale = 0
         self.fig, self.ax = plt.subplots()
         self.ax.plot(data, lw=0.5)
         self.ax.set_ylim(bottom = 0, top = None)
         self.add_widget(FigureCanvasKivyAgg(self.fig))
         self.fig.canvas.draw_idle()
+        self.frameIndicator = None
+        self.indicatorLength = 1
         
     def renderGraph(self):
         self.ax.set_ylim(auto = True)
@@ -125,16 +125,30 @@ class MultiGraph(BoxLayout):
         else:
             self.ax.set_ylim(bottom = 0, top = None)
         self.fig.canvas.draw_idle()
+    
+    def renderFrameIndicator(self):
+        if self.frameIndicator != None:
+            vertical_line = self.frameIndicator.pop(0)
+            vertical_line.remove()
+        self.indicatorLength = max(max(self.data), self.scale, self.indicatorLength)
+        self.frameIndicator = self.ax.plot([self.frameNumber, self.frameNumber], [0, self.indicatorLength], 'k-', lw=0.5, color='red')
+        self.fig.canvas.draw_idle()
        
     def updateGraph(self, data = None, frameNumber = None):
+        if frameNumber != None:
+            self.frameNumber = frameNumber
+            self.renderFrameIndicator()
         if data != None:
             self.data = data
             self.renderGraph()
+            self.renderFrameIndicator()
         
     def clearGraph(self):
         self.ax.clear()
         self.data = [0] * 376
+        self.indicatorLength = 1
         self.renderGraph()
+        self.renderFrameIndicator()
     
     def setScale(self, scale_new):
         if 0 <= scale_new:

@@ -13,7 +13,7 @@ import kivy
 import sys
 if sys.version_info.major != 3 or sys.version_info.minor != 8:
     print(sys.version_info)
-    sys.exit('Python 3.8.X or is required.')
+    sys.exit('Python 3.8.X is required.')
 pkg_resources.require("matplotlib==3.1.3")
 from heatmap import Heatmap
 from fileChooser import FileChooser
@@ -84,6 +84,7 @@ class tdmsAnalyzer(App):
             threshold_new = int(val)
             if self.heatmap.setDataIndex(threshold_new):
                 self.singlegraphpanel.updateGraph(frameNumber = threshold_new)
+                self.multigraphpanel.updateGraph(frameNumber = threshold_new)
                 print('frame: ' + str(threshold_new))
             else:
                 raise Exception
