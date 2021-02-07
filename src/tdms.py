@@ -42,7 +42,10 @@ class TdmsReader():
         self.values = values
         self.dataset = 0
         
-        #self.thresholds[1] = self.thresholds[0]
+        # for i in len(thresholds):
+        #     if len(thresholds[i]) < len(thresholds[0]):
+        #         thresholds[i].append(thresholds[len(thresholds[i]):len(thresholds[0])])
+        self.thresholds[1] = self.thresholds[0]
         
     def getCurrentData(self):
         return self.values[self.dataset]

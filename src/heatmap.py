@@ -12,11 +12,11 @@ from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
 class Heatmap(BoxLayout):
     
-    def __init__(self, on_hit, **kwargs):
+    def __init__(self, initial_frames_number, on_hit, **kwargs):
         super().__init__(**kwargs)
         self.hitX = 0
         self.hitY = 0
-        self.data = np.zeros((376, 256, 128))
+        self.data = np.zeros((initial_frames_number, 256, 128))
         self.dataIndex = 0
         self.fig, self.ax = plt.subplots()
         self.renderHeatmap()

@@ -23,6 +23,7 @@ from thresholdSlider import ThresholdSlider
 kivy.require('1.11.1')
 
 WINDOW_RATIO = 1.7578051087984862819299905392621
+INITIAL_FRAMES_NUMBER = 376
 
 class tdmsAnalyzer(App):
     def __init__(self, **kwargs):
@@ -32,10 +33,10 @@ class tdmsAnalyzer(App):
         self.sliderandbuttons = BoxLayout(orientation='vertical')
         self.thresholdslider = ThresholdSlider(thresholdUpdateFnc = self.thresholdUpdate)
         self.buttons = BoxLayout()
-        self.heatmap = Heatmap(on_hit = self.updateGraphs)
+        self.heatmap = Heatmap(initial_frames_number = INITIAL_FRAMES_NUMBER, on_hit = self.updateGraphs)
         self.filechooser = FileChooser(loadingFunction = self.heatmap.loadData)
-        self.singlegraphpanel = GraphPanel(data = [0] * 376, single = True)
-        self.multigraphpanel = GraphPanel(data = [0] * 376, multi = True)  
+        self.singlegraphpanel = GraphPanel(data = [0] * INITIAL_FRAMES_NUMBER, single = True)
+        self.multigraphpanel = GraphPanel(data = [0] * INITIAL_FRAMES_NUMBER, multi = True)  
         
         self.btnNext = Button(text = 'NEXT\nFIGURE',
                     on_press = self.nextFigure)

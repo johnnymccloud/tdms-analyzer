@@ -1,3 +1,4 @@
+import numpy as np
 from matplotlib import style
 from matplotlib import pyplot as plt
 #from matplotlib import use as mpl_use
@@ -57,7 +58,10 @@ class GraphPanel(FloatLayout):
     def updateGraph(self, frameNumber = None, data = None):
         self.graph.updateGraph(data, frameNumber)
         if data != None:
-            self.sliderRangeUpdate(max(data))
+            if type(self.graph) is SingleGraph:
+                self.sliderRangeUpdate(max(data))
+            else:
+                self.sliderRangeUpdate(max(max(data), self.graph.indicatorLength))
 
 class SingleGraph(BoxLayout):
     def __init__(self, data, **kwargs):
@@ -153,7 +157,7 @@ class MultiGraph(BoxLayout):
     
     def clearGraph(self):
         self.ax.clear()
-        self.data = [0] * 376
+        self.data = np.zeros(len(self.data))
         self.indicatorLength = 1
         self.renderGraph()
         self.renderFrameIndicator()
