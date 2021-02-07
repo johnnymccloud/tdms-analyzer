@@ -29,7 +29,7 @@ class TdmsReader():
         thresholds = []
         thresholdNames = []
         for thresholdConfig in self.thresholdsConfig:
-            thresholdSet = np.array(data[thresholdConfig], dtype='int32')
+            thresholdSet = np.array(data[thresholdConfig], dtype='int32').reshape(-1) #flatten to 1-D
             thresholds.append(thresholdSet)
             thresholdNames.append(names[thresholdConfig])
         self.thresholds = thresholds
@@ -49,6 +49,8 @@ class TdmsReader():
         
     def getCurrentData(self):
         return self.values[self.dataset]
+    def getCurrentThreshold(self):
+        return self.thresholds[self.dataset]
     def getThresholdNames(self):
         return self.thresholdNames
     def setThreshold(self, th_name):

@@ -18,9 +18,9 @@ class ThresholdSlider(FloatLayout):
         
     def thresholdUpdate(self, instance, val):
         try:
-            th_new = int(val)
-            if self.slider.min <= th_new <= self.slider.max:
-                self.thresholdUpdateFnc(instance, th_new)
+            frame_number = int(val)
+            if self.slider.min <= frame_number <= self.slider.max:
+                th_new = self.thresholdUpdateFnc(instance, frame_number)
                 self.lblSliderValue.text = str(th_new)
             else:
                 raise Exception('negative threshold value')
@@ -35,3 +35,12 @@ class ThresholdSlider(FloatLayout):
     def thresholdDec(self):
         if self.slider.value > self.slider.min:
             self.slider.value -= 1
+            
+    def updateThresholdList(self, thresholdList):
+        self.slider.range = (int(min(thresholdList)), int(max(thresholdList)))
+        if self.slider.value < self.slider.min:
+            self.slider.value = self.slider.min
+        elif self.slider.value > self.slider.max:
+            self.slider.value = self.slider.max
+            
+        

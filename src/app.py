@@ -34,7 +34,7 @@ class tdmsAnalyzer(App):
         self.thresholdslider = ThresholdSlider(thresholdUpdateFnc = self.thresholdUpdate)
         self.buttons = BoxLayout()
         self.heatmap = Heatmap(initial_frames_number = INITIAL_FRAMES_NUMBER, on_hit = self.updateGraphs)
-        self.filechooser = FileChooser(loadingFunction = self.heatmap.loadData)
+        self.filechooser = FileChooser(loadingFunction = self.loadData)
         self.singlegraphpanel = GraphPanel(data = [0] * INITIAL_FRAMES_NUMBER, single = True)
         self.multigraphpanel = GraphPanel(data = [0] * INITIAL_FRAMES_NUMBER, multi = True)  
         
@@ -74,23 +74,28 @@ class tdmsAnalyzer(App):
 
     def updateGraphs(self, x, y):
         updateData = [self.heatmap.getDataElement(frame, x, y) for frame in range(self.heatmap.getNumberOfFrames())]
-        frameNumber = self.heatmap.getFrameNumber()
-        self.singlegraphpanel.updateGraph(frameNumber, updateData)
+        threshold_new = self.heatmap.getThresholdValue()
+        self.singlegraphpanel.updateGraph(frameNumber = threshold_new, data = updateData)
         self.filechooser.updateCoordinates(x, y)
     
-    def maxThUpdate(self, val):
-        print(val)
     def thresholdUpdate(self, instance, val):
         try:
-            threshold_new = int(val)
-            if self.heatmap.setDataIndex(threshold_new):
+            data_index = int(val)
+            if self.heatmap.setDataIndex(data_index):
+                threshold_new = self.heatmap.getThresholdValue()
                 self.singlegraphpanel.updateGraph(frameNumber = threshold_new)
                 self.multigraphpanel.updateGraph(frameNumber = threshold_new)
                 print('frame: ' + str(threshold_new))
+                return threshold_new
             else:
                 raise Exception
         except:
-            print('invalid frame index')        
+            print('invalid frame index')  
+            return 0
+    def loadData(self, data, thresholds):
+        self.heatmap.loadData(data, thresholds)
+        self.singlegraphpanel.updateThresholdList(thresholds)
+        self.multigraphpanel.updateThresholdList(thresholds)
         
     def addCurrentToMultiGraph(self,btn):
         currentData = self.singlegraphpanel.graph.getData()

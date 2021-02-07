@@ -65,20 +65,24 @@ class FileChooser(FloatLayout):
             if '.tdms' in tdmsPath:
                 print(tdmsPath + ' loading...')
                 self.tdmsReader.readTdmsToNpArray(tdmsPath)
-                data = self.tdmsReader.getCurrentData()
-                self.loadingfunction(data)
+                self.updateDataAndThresholds()
                 self.thresholdlist.updateThresholds(self.tdmsReader.getThresholdNames())
                 print('SUCCESSFULLY LOADED')
             else:
                 print('Incorrect File')
-        except:
+        except Exception as exception:
+            print(exception)
             print('Select File')
             
     def changeTh(self, btn):
         updateRequired = self.tdmsReader.setThreshold(btn.text)
         if updateRequired:
-            data = self.tdmsReader.getCurrentData()
-            self.loadingfunction(data)
+            self.updateDataAndThresholds()
+            
+    def updateDataAndThresholds(self):
+        data = self.tdmsReader.getCurrentData()
+        thresholds = self.tdmsReader.getCurrentThreshold()
+        self.loadingfunction(data, thresholds)
     
     def updateCoordinates(self, x, y):
         tempText = str(x) + ', ' + str(y)

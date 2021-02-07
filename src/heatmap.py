@@ -17,6 +17,7 @@ class Heatmap(BoxLayout):
         self.hitX = 0
         self.hitY = 0
         self.data = np.zeros((initial_frames_number, 256, 128))
+        self.thresholds = range(initial_frames_number)
         self.dataIndex = 0
         self.fig, self.ax = plt.subplots()
         self.renderHeatmap()
@@ -48,8 +49,9 @@ class Heatmap(BoxLayout):
         else:
             return False
             
-    def loadData(self, data):
+    def loadData(self, data, thresholds):
         self.data = data
+        self.thresholds = thresholds
         self.renderHeatmap()
         
     def getDataElement(self, frame, x, y):
@@ -58,6 +60,10 @@ class Heatmap(BoxLayout):
         return len(self.data)
     def getFrameNumber(self):
         return self.dataIndex
+    def getThresholdValue(self):
+        return self.thresholds[self.dataIndex]
+    def getThresholdList(self):
+        return self.thresholds
     
     def on_touch_down(self, touch):
         inX, inY = touch.pos

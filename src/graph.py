@@ -62,15 +62,19 @@ class GraphPanel(FloatLayout):
                 self.sliderRangeUpdate(max(data))
             else:
                 self.sliderRangeUpdate(max(max(data), self.graph.indicatorLength))
+                
+    def updateThresholdList(self, thresholdList):
+        self.graph.updateThresholdList(thresholdList)
 
 class SingleGraph(BoxLayout):
     def __init__(self, data, **kwargs):
         super().__init__(**kwargs)
         self.data = data
+        self.thresholds = range(len(self.data))
         self.frameNumber = 0
         self.scale = 0
         self.fig, self.ax = plt.subplots()
-        self.ax.plot(data, lw=0.5)
+        self.ax.plot(self.thresholds, data, lw=0.5)
         self.indicatorLength = 1
         self.ax.set_ylim(bottom = 0, top = self.indicatorLength)
         self.add_widget(FigureCanvasKivyAgg(self.fig))
@@ -81,7 +85,7 @@ class SingleGraph(BoxLayout):
         self.ax.set_ylim(auto = True)
         self.indicatorLength = max(max(self.data), self.scale, 1)
         self.ax.plot([self.frameNumber, self.frameNumber], [0, self.indicatorLength], 'k-', lw=0.5, color='red')
-        self.ax.plot(self.data, lw=0.5)
+        self.ax.plot(self.thresholds, self.data, lw=0.5)
         if self.scale != 0:
             self.ax.set_ylim(bottom = 0, top = self.scale)
         else:
@@ -93,6 +97,9 @@ class SingleGraph(BoxLayout):
             self.data = data
         self.frameNumber = frameNumber
         self.renderGraph()
+        
+    def updateThresholdList(self, thresholdList):
+        self.thresholds = thresholdList
     
     def getData(self):
         return self.data
@@ -113,20 +120,21 @@ class MultiGraph(BoxLayout):
     def __init__(self, data, **kwargs):
         super().__init__(**kwargs)
         self.data = data
+        self.thresholds = range(len(self.data))
         self.frameNumber = 0
         self.scale = 0
         self.fig, self.ax = plt.subplots()
-        self.ax.plot(data, lw=0.5)
+        #self.ax.plot(self.thresholds, self.data, lw=0.5)
         self.indicatorLength = 1
         self.ax.set_ylim(bottom = 0, top = self.indicatorLength)
         self.add_widget(FigureCanvasKivyAgg(self.fig))
         self.fig.canvas.draw_idle()
         self.frameIndicator = None
         
-        
+
     def renderGraph(self, drawData = True):
         if drawData:
-            self.ax.plot(self.data, lw=0.5)
+            self.ax.plot(self.thresholds, self.data, lw=0.5)
         self.updateScale()
         self.fig.canvas.draw_idle()
     
@@ -146,6 +154,9 @@ class MultiGraph(BoxLayout):
             self.data = data
             self.renderFrameIndicator()
             self.renderGraph()
+            
+    def updateThresholdList(self, thresholdList):
+        self.thresholds = thresholdList
     
     def updateScale(self):
         self.ax.set_ylim(auto = True)
