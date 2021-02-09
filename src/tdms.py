@@ -1,24 +1,25 @@
 from nptdms import TdmsFile, TdmsWriter, ChannelObject, RootObject
 import numpy as np
 import pandas as pd
+import re
 
 import json
 
 class TdmsReader():
     def __init__(self):
-        self.dict = None #TBD: add reading single properties from tdms file
-        
+       
         self.dataset = None
         self.thresholds = None
         self.values = None
         self.thresholdsConfig = None
         self.valuesConfig = None
         self.thresholdNames = None
-        
+        self.settings = None
+        self.comment = None
         
         self.readConfigFromJson()
 
-    def readTdmsToNpArray(self, name):
+    def readTdms(self, name):
         file = TdmsFile.read(name)
         data = []
         names = []
@@ -46,11 +47,27 @@ class TdmsReader():
         #     if len(thresholds[i]) < len(thresholds[0]):
         #         thresholds[i].append(thresholds[len(thresholds[i]):len(thresholds[0])])
         self.thresholds[1] = self.thresholds[0]
+        #self.properties = file.properties['PXDDACsSettings']     
+        self.comment = file.properties['Comment']
+        self.digestSettings(file.properties['PXDDACsSettings'])
         
+    def digestSettings(self, settings_from_properties):
+        self.settings = []
+        pattern = '<(.*)>\s*<Name>(.*)<\/Name>\s*<Val>(.*)<\/Val>\s*<\/(.*)>'
+        matches = re.findall(pattern, settings_from_properties)
+        for match in matches:
+            datatype = 'DT: ' + match[0]
+            name = 'Name: ' + match[1]
+            value = 'Value: ' + match[2]
+            setting = name + '\n' + value #datatype + '\n' + 
+            self.settings.append(setting)
+
     def getCurrentData(self):
         return self.values[self.dataset]
     def getCurrentThreshold(self):
         return self.thresholds[self.dataset]
+    def getSettings(self):
+        return self.settings
     def getThresholdNames(self):
         return self.thresholdNames
     def setThreshold(self, th_name):
