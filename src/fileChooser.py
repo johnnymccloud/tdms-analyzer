@@ -50,10 +50,10 @@ class FileChooser(FloatLayout):
         
         self.filelist = FileList(size_hint = (1, 0.5),
                                  pos_hint = {'x': 0, 'y' : 0.5})
-        self.settingslist = SettingsList(size_hint = (1, 0.4),
-                                           pos_hint = {'x': 0, 'y' : 0.1})
+        self.settingslist = SettingsList(size_hint = (1, 0.35),
+                                           pos_hint = {'x': 0, 'y' : 0.15})
         self.thresholdlist = ThresholdList(size_hint = (1, 0.05),
-                                           pos_hint = {'x': 0, 'y' : 0.05},
+                                           pos_hint = {'x': 0, 'y' : 0.1},
                                            chooseThFnc = self.changeTh)
         self.loadbutton = Button(size_hint = (0.5, 0.05),
                                  pos_hint = {'x': 0.5, 'y' : 0},

@@ -56,10 +56,9 @@ class TdmsReader():
         pattern = '<(.*)>\s*<Name>(.*)<\/Name>\s*<Val>(.*)<\/Val>\s*<\/(.*)>'
         matches = re.findall(pattern, settings_from_properties)
         for match in matches:
-            datatype = 'DT: ' + match[0]
-            name = 'Name: ' + match[1]
-            value = 'Value: ' + match[2]
-            setting = name + '\n' + value #datatype + '\n' + 
+            name = match[1]
+            value = match[2]
+            setting = name + ': ' + value
             self.settings.append(setting)
 
     def getCurrentData(self):
