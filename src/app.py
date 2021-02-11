@@ -114,11 +114,5 @@ class tdmsAnalyzer(App):
         elif y > (x / WINDOW_RATIO) + 5:
             y = x / WINDOW_RATIO
         Window.size = (int(x), int(y))
-        
-    
-    def on_stop(self):
-        pass #TBD: add saving last path in file
-    def on_start(self):
-        pass #TBD: add loading last path from file
 
 tdmsAnalyzer().run()
