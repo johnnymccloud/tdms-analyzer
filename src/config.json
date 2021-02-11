@@ -1,6 +1,12 @@
 {
-"thresholdsConfig":
-[0, 2],
-"valuesConfig":
-[1, 3]
+    "thresholdsConfig": [
+        0,
+        2
+    ],
+    "valuesConfig": [
+        1,
+        3
+    ],
+    "commentConfig": "Comment",
+    "settingsConfig": "PXDDACsSettings"
 }

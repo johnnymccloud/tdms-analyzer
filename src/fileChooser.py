@@ -4,6 +4,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
 
 from tdms import TdmsReader
 
@@ -48,12 +49,16 @@ class FileChooser(FloatLayout):
         self.loadingfunction = loadingFunction
         self.tdmsReader = TdmsReader()
         
-        self.filelist = FileList(size_hint = (1, 0.5),
+        self.filelist = FileList(size_hint = (1, 0.4),
+                                 pos_hint = {'x': 0, 'y' : 0.6})
+        self.comment = TextInput(text = '',
+                                 readonly = True,
+                                 size_hint = (1, 0.1),
                                  pos_hint = {'x': 0, 'y' : 0.5})
         self.settingslist = SettingsList(size_hint = (1, 0.35),
                                            pos_hint = {'x': 0, 'y' : 0.15})
-        self.thresholdlist = ThresholdList(size_hint = (1, 0.05),
-                                           pos_hint = {'x': 0, 'y' : 0.1},
+        self.thresholdlist = ThresholdList(size_hint = (1, 0.1),
+                                           pos_hint = {'x': 0, 'y' : 0.05},
                                            chooseThFnc = self.changeTh)
         self.loadbutton = Button(size_hint = (0.5, 0.05),
                                  pos_hint = {'x': 0.5, 'y' : 0},
@@ -64,6 +69,7 @@ class FileChooser(FloatLayout):
                                  text = '0, 0')
         
         self.add_widget(self.filelist)
+        self.add_widget(self.comment)
         self.add_widget(self.settingslist)
         self.add_widget(self.thresholdlist)
         self.add_widget(self.loadbutton)
@@ -79,6 +85,7 @@ class FileChooser(FloatLayout):
                 self.updateDataAndThresholds()
                 self.settingslist.updateSettings(self.tdmsReader.getSettings())
                 self.thresholdlist.updateThresholds(self.tdmsReader.getThresholdNames())
+                self.comment.text = self.tdmsReader.getComment()
                 print('SUCCESSFULLY LOADED')
             else:
                 print('Incorrect File')

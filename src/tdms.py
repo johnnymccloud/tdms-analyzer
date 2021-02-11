@@ -11,11 +11,10 @@ class TdmsReader():
         self.dataset = None
         self.thresholds = None
         self.values = None
-        self.thresholdsConfig = None
-        self.valuesConfig = None
         self.thresholdNames = None
         self.settings = None
         self.comment = None
+        self.config = {'thresholds': None,'values': None, 'comment' : None, 'settings': None}
         
         self.readConfigFromJson()
 
@@ -29,14 +28,14 @@ class TdmsReader():
             names.append(group.name)
         thresholds = []
         thresholdNames = []
-        for thresholdConfig in self.thresholdsConfig:
+        for thresholdConfig in self.config['thresholds']:
             thresholdSet = np.array(data[thresholdConfig], dtype='int32').reshape(-1) #flatten to 1-D
             thresholds.append(thresholdSet)
             thresholdNames.append(names[thresholdConfig])
         self.thresholds = thresholds
         self.thresholdNames = thresholdNames
         values = []
-        for valueConfig in self.valuesConfig:
+        for valueConfig in self.config['values']:
             df = pd.DataFrame(data[valueConfig])
             frames = [np.array(df.iloc[i], dtype='int32').reshape((256, 128)) for i in range(len(df))]
             values.append(frames)
@@ -48,8 +47,8 @@ class TdmsReader():
         #         thresholds[i].append(thresholds[len(thresholds[i]):len(thresholds[0])])
         self.thresholds[1] = self.thresholds[0]
         #self.properties = file.properties['PXDDACsSettings']     
-        self.comment = file.properties['Comment']
-        self.digestSettings(file.properties['PXDDACsSettings'])
+        self.comment = file.properties[self.config['comment']]
+        self.digestSettings(file.properties[self.config['settings']])
         
     def digestSettings(self, settings_from_properties):
         self.settings = []
@@ -67,6 +66,8 @@ class TdmsReader():
         return self.thresholds[self.dataset]
     def getSettings(self):
         return self.settings
+    def getComment(self):
+        return self.comment
     def getThresholdNames(self):
         return self.thresholdNames
     def setThreshold(self, th_name):
@@ -84,13 +85,17 @@ class TdmsReader():
         try:
             with open("config.json", "r") as config_file:
                 config = json.load(config_file)
-                self.thresholdsConfig = config['thresholdsConfig']
-                self.valuesConfig = config['valuesConfig']
+                self.config['thresholds'] = config['thresholdsConfig']
+                self.config['values'] = config['valuesConfig']
+                self.config['comment'] = config['commentConfig']
+                self.config['settings'] = config['settingsConfig']
         except:
             print('CONFIG CORRUPTED\ngenerating example config file: --example_config.json--')
             with open("example_config.json", "w") as config_file:
                 data_set = {'thresholdsConfig': [0, 2],
-                            'valuesConfig' : [1, 3]
+                            'valuesConfig' : [1, 3],
+                            'commentConfig' : 'Comment',
+                            'settingsConfig' : 'PXDDACsSettings'
                             }
                 config_file.write(json.dumps(data_set, indent=4))
                 print('application will exit now...')
