@@ -73,7 +73,7 @@ class tdmsAnalyzer(App):
         self.singlegraphpanel.updateGraph(frameNumber = threshold_new, data = updateData)
         self.filechooser.updateCoordinates(x, y)
     
-    def thresholdUpdate(self, instance, val):
+    def thresholdUpdate(self, val):
         try:
             data_index = int(val)
             if self.heatmap.setDataIndex(data_index):
