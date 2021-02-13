@@ -78,7 +78,6 @@ class TdmsReader():
                 return True
             return False
         except:
-            print('threshold name not found')
             return False
     
     def readConfigFromJson(self):
@@ -90,7 +89,7 @@ class TdmsReader():
                 self.config['comment'] = config['commentConfig']
                 self.config['settings'] = config['settingsConfig']
         except:
-            print('CONFIG CORRUPTED\ngenerating example config file: --example_config.json--')
+            print('CONFIG CORRUPTED\nGenerating example config file: --example_config.json--')
             with open("example_config.json", "w") as config_file:
                 data_set = {'thresholdsConfig': [0, 2],
                             'valuesConfig' : [1, 3],
@@ -98,5 +97,5 @@ class TdmsReader():
                             'settingsConfig' : 'PXDDACsSettings'
                             }
                 config_file.write(json.dumps(data_set, indent=4))
-                print('application will exit now...')
+                print('Application will exit now...')
                 exit()

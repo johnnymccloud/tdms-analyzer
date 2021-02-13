@@ -45,15 +45,13 @@ class GraphPanel(FloatLayout):
                 self.lblSliderValue.text = str(scale_new)
             else:
                 raise Exception('negative scale value')
-        except:
-            print('invalid scale value')
+        except Exception as exception:
+            print(exception)
         return True
             
     def sliderRangeUpdate(self, val):
         if val > 0:
             self.slider.max = int(val)
-        else:
-            print('invalid slider max value')
             
     def updateGraph(self, frameNumber = None, data = None):
         self.graph.updateGraph(data, frameNumber)

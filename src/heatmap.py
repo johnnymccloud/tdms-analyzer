@@ -73,7 +73,5 @@ class Heatmap(BoxLayout):
         heatmapY = round((Y - 0.1107) / 0.00301171875)      
         if 0 <= heatmapX <= 127 and 0 <= heatmapY <= 255:
             self.hitX, self.hitY = (heatmapX, heatmapY)
-            print('\n--- TOUCH ---\n')
-            print((self.hitX, self.hitY))
             self.on_hit(self.hitX, self.hitY)
         

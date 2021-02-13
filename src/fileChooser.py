@@ -78,9 +78,8 @@ class FileChooser(FloatLayout):
     def loadFileFromPath(self, btn):
         try:
             tdmsPath = self.filelist.selection[0]
-            print(tdmsPath + ' check if TDMS file')
             if '.tdms' in tdmsPath:
-                print(tdmsPath + ' loading...')
+                print(tdmsPath + ' LOADING...')
                 self.tdmsReader.readTdms(tdmsPath)
                 self.updateDataAndThresholds()
                 self.settingslist.updateSettings(self.tdmsReader.getSettings())
@@ -91,7 +90,7 @@ class FileChooser(FloatLayout):
                 print('Incorrect File')
         except Exception as exception:
             print(exception)
-            print('Select File')
+            print('Select File...')
             
     def changeTh(self, btn):
         updateRequired = self.tdmsReader.setThreshold(btn.text)

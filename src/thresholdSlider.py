@@ -24,8 +24,8 @@ class ThresholdSlider(FloatLayout):
                 self.lblSliderValue.text = str(th_new)
             else:
                 raise Exception('negative threshold value')
-        except:
-            print('invalid threshold value')
+        except Exception as exception:
+            print(exception)
         return True
     
     def thresholdInc(self):

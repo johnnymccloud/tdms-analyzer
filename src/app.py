@@ -85,12 +85,10 @@ class tdmsAnalyzer(App):
                 threshold_new = self.heatmap.getThresholdValue()
                 self.singlegraphpanel.updateGraph(frameNumber = threshold_new)
                 self.multigraphpanel.updateGraph(frameNumber = threshold_new)
-                print('frame: ' + str(threshold_new))
                 return threshold_new
             else:
                 raise Exception
         except:
-            print('invalid frame index')  
             return 0
     def loadData(self, data, thresholds):
         self.heatmap.loadData(data, thresholds)
