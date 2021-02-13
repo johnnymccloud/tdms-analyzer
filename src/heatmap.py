@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
 
 # from kivy.graphics import *
 

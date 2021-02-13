@@ -1,13 +1,10 @@
 import numpy as np
 from matplotlib import style
 from matplotlib import pyplot as plt
-#from matplotlib import use as mpl_use
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.slider import Slider
 from kivy.uix.label import Label
-
-#mpl_use('module://kivy.garden.matplotlib.backend_kivy')
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 style.use('dark_background')
 
